@@ -1,3 +1,61 @@
+# Endopoint cart
+
+---
+### Request preparation
+Bebore you get information about cart's state first of all you have to get cookies header and all the rest headers (inc. CSRF) by sending request to root endpoint and then use them in further requests in a scope of the current browser session:
+```javascript
+const logHeaders = async (hostname) => {
+
+    const config = {
+        method: 'get',
+        url: `http://${hostname}/`
+    }
+
+    const response = await axios(config)
+    
+    console.log(JSON.stringify(response.config.headers))
+}
+```
+
+## Complete Request (axios)
+```javascript
+const getCart = async () => {
+
+    const config = {
+        method: 'get',
+        url: '/'
+    }
+
+    const response = await axios(config)
+
+    const cartConfig = {
+        method: 'get',
+        url: '/api/cart',
+        headers: response.config.headers
+    }
+
+    const cartResponse = await axios(cartConfig)
+    // console.log(cartResponse.data)
+
+    return cartResponse.data;
+}
+```
+## Response
+```javascript
+[
+    {
+        "productId": 1,
+        "addons": [3,2],
+        "qty": 1
+    },
+    {
+        "productId": 39,
+        "addons": [],
+        "qty": 3
+    }
+]
+```
+---
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
