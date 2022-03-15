@@ -1,12 +1,12 @@
 import "./App.css";
-import CardItem from "./components/CardItem";
+import Card from "./components/Card";
 
-function App(props) {
+const App = ({ item }) => {
 	return (
 		<div className="App">
-			<CardItem item={props.item} />
+			<Card item={item} />
 		</div>
 	);
-}
+};
 
 export default App;
