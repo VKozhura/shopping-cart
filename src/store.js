@@ -219,7 +219,7 @@ export const data = {
 export const responseCartList = [
 	{
 		productId: 1,
-		addons: [3, 2],
+		addons: [],
 		qty: 1,
 	},
 	{
