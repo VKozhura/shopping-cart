@@ -1,9 +1,11 @@
 import React from "react";
 import ButtonCart from "./Button";
+import { addonsArr } from "../store";
 
 const Card = ({ item }) => {
 	const [qty, setQty] = React.useState(1);
 	const [totalPrice, setTotalPrice] = React.useState(item.price);
+	const [activeAddons, setActiveAddon] = React.useState(() => addonsArr(item.id));
 
 	const addQty = () => {
 		const newQty = qty + 1;
@@ -27,7 +29,19 @@ const Card = ({ item }) => {
 		setTotalPrice(newTotal);
 	};
 
-	const addonsElements = item.addons.map((addon) => <button key={addon.id}>{addon.title}</button>);
+	const onSelectAddon = (addonId) => {
+		if (activeAddons.includes(addonId)) {
+			setActiveAddon((prevActiveAddon) => prevActiveAddon.filter((addon) => addon !== addonId));
+		} else {
+			setActiveAddon([...activeAddons, addonId]);
+		}
+	};
+
+	const addonsElements = item.addons.map((addon) => (
+		<button onClick={() => onSelectAddon(addon.id)} key={addon.id}>
+			{activeAddons.includes(addon.id) ? "Уже добавлен к товару" : addon.title}
+		</button>
+	));
 
 	const featuresElements = item.attributes.map((attribute) => (
 		<li key={attribute.id}>

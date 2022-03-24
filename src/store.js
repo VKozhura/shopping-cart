@@ -218,7 +218,7 @@ export const data = {
 
 export const responseCartList = [
 	{
-		productId: 2,
+		productId: 1,
 		addons: [3, 2],
 		qty: 1,
 	},
@@ -232,4 +232,9 @@ export const responseCartList = [
 export const isInCart = (itemId) => {
 	const getProduct = responseCartList.find((product) => product.productId === itemId);
 	return getProduct !== undefined ? true : false;
+};
+
+export const addonsArr = (itemId) => {
+	const product = responseCartList.find((product) => product.productId === itemId);
+	return product.addons;
 };
