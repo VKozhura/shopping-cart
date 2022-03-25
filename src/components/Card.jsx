@@ -1,8 +1,39 @@
 import React from "react";
 import ButtonCart from "./Button";
 import { addonsArr } from "../store";
+import { Pricetag } from './Pricetag';
+
+const initCartState = {
+	productId: 2,
+	addons: [345],
+	qty: 1
+}
+
+
 
 const Card = ({ item }) => {
+	const [state, setState] = React.useState({
+		cartToSubmit: {
+			productId: 2,
+			addons: [746],
+			qty: 1
+		},
+		productPrice: 1050,
+		addons: [
+			{
+				id: 746,
+				price: 2000,
+				selected: true
+			},
+			{
+				id: 345,
+				price: 550,
+				selected: false
+			},
+		],
+		qty: 1,
+		total: 3050
+	});
 	const [qty, setQty] = React.useState(1);
 	const [totalPrice, setTotalPrice] = React.useState(parseInt(item.price));
 	const [addonPrice, setAddonPrice] = React.useState(0);
@@ -65,6 +96,7 @@ const Card = ({ item }) => {
 			<h3>{item.name}</h3>
 			<p>Артикул: {item.sku}</p>
 			<p>{totalPrice} р</p>
+			<Pricetag state={state} />
 			<p>{item.description}</p>
 			<ul>{featuresElements}</ul>
 			<div>{addonsElements}</div>
