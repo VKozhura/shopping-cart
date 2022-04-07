@@ -1,110 +1,71 @@
 import React from "react";
-import ButtonCart from "./Button";
-import { addonsArr } from "../store";
-import { Pricetag } from './Pricetag';
+import { useDispatch, useSelector } from "react-redux";
+import { addItemAC, removeItemAC, setQtyAC, toggleActiveAddonAC } from "../redux/product-reducer";
 
-const initCartState = {
-	productId: 2,
-	addons: [345],
-	qty: 1
-}
+import {
+	selectTotalPrice,
+	selectAddonsByProductId,
+	selectCurrentProductCard,
+	selectCartButtonName,
+} from "../redux/selectors";
 
+const Card = ({ product }) => {
+	const dispatch = useDispatch();
+	const totalPrice = useSelector(selectTotalPrice(product.id));
+	const currentProductCard = useSelector(selectCurrentProductCard);
+	const addons = useSelector(selectAddonsByProductId(product.id));
+	const cartButtonName = useSelector(selectCartButtonName(product.id));
 
-
-const Card = ({ item }) => {
-	const [state, setState] = React.useState({
-		cartToSubmit: {
-			productId: 2,
-			addons: [746],
-			qty: 1
-		},
-		productPrice: 1050,
-		addons: [
-			{
-				id: 746,
-				price: 2000,
-				selected: true
-			},
-			{
-				id: 345,
-				price: 550,
-				selected: false
-			},
-		],
-		qty: 1,
-		total: 3050
-	});
-	const [qty, setQty] = React.useState(1);
-	const [totalPrice, setTotalPrice] = React.useState(parseInt(item.price));
-	const [addonPrice, setAddonPrice] = React.useState(0);
-	const [activeAddons, setActiveAddon] = React.useState(() => addonsArr(item.id));
-
-	const addQty = () => {
-		const newQty = qty + 1;
-		const newAddonPrice = (addonPrice / qty) * newQty;
-		const newTotal = newQty * item.price + newAddonPrice;
-		setQty(newQty);
-		setAddonPrice(newAddonPrice);
-		setTotalPrice(newTotal);
+	const addItem = () => {
+		dispatch(addItemAC(product.id));
 	};
 
-	const deleteQty = () => {
-		if (qty > 1) {
-			const newQty = qty - 1;
-			const newAddonPrice = (addonPrice / qty) * newQty;
-			const newTotal = newQty * item.price + newAddonPrice;
-			setQty(newQty);
-			setAddonPrice(newAddonPrice);
-			setTotalPrice(newTotal);
-		}
+	const removeItem = () => {
+		currentProductCard.qty > 1 && dispatch(removeItemAC(product.id));
 	};
 
 	const onInputChange = (e) => {
-		const newAddonPrice = (addonPrice / qty) * e.target.value;
-		const newTotal = e.target.value * item.price + newAddonPrice;
-		setQty(parseInt(e.target.value));
-		setAddonPrice(newAddonPrice);
-		setTotalPrice(newTotal);
+		const data = {
+			productId: product.id,
+			qty: Number(e.target.value),
+		};
+		dispatch(setQtyAC(data));
 	};
 
-	const onSelectAddon = (addonId, addonPrice) => {
-		if (activeAddons.includes(addonId)) {
-			setActiveAddon((prevActiveAddon) => prevActiveAddon.filter((addon) => addon !== addonId));
-			setAddonPrice((prevAddonPrice) => prevAddonPrice - qty * parseInt(addonPrice));
-			setTotalPrice((prevPrice) => prevPrice - qty * parseInt(addonPrice));
-		} else {
-			setActiveAddon([...activeAddons, addonId]);
-			setAddonPrice((prevAddonPrice) => prevAddonPrice + qty * parseInt(addonPrice));
-			setTotalPrice((prevPrice) => prevPrice + qty * parseInt(addonPrice));
-		}
+	const toggleActiveAddon = (id) => {
+		const data = {
+			addonId: id,
+		};
+		dispatch(toggleActiveAddonAC(data));
 	};
-
-	const addonsElements = item.addons.map((addon) => (
-		<button onClick={() => onSelectAddon(addon.id, addon.addable_product.price)} key={addon.id}>
-			{activeAddons.includes(addon.id) ? "Уже добавлен к товару" : addon.title}
-		</button>
-	));
-
-	const featuresElements = item.attributes.map((attribute) => (
-		<li key={attribute.id}>
-			{attribute.description}: {attribute.pivot.value} {attribute.unit}
-		</li>
-	));
 
 	return (
-		<article id={item.id}>
-			<h3>{item.name}</h3>
-			<p>Артикул: {item.sku}</p>
-			<p>{totalPrice} р</p>
-			<Pricetag state={state} />
-			<p>{item.description}</p>
-			<ul>{featuresElements}</ul>
-			<div>{addonsElements}</div>
+		<article id={product.id}>
+			<h3>{product.name}</h3>
+			<p>Артикул: {product.sku}</p>
+			<p>{totalPrice} ₽ </p>
+			<p>{product.description}</p>
+			<ul>
+				{product.attributes.map((attribute) => (
+					<li key={attribute.id}>
+						{attribute.description}: {attribute.pivot.value} {attribute.unit}
+					</li>
+				))}
+			</ul>
 			<div>
-				<button onClick={deleteQty}>-</button>
-				<input type="number" value={qty} onChange={onInputChange} />
-				<button onClick={addQty}>+</button>
-				<ButtonCart itemId={item.id} />
+				{addons.map(({ id, selected, title }) => {
+					return (
+						<button onClick={() => toggleActiveAddon(id)} key={id}>
+							{selected ? "Уже добавлен к товару" : "Добавить"} - {title}
+						</button>
+					);
+				})}
+			</div>
+			<div>
+				<button onClick={removeItem}>-</button>
+				<input type="number" value={currentProductCard.qty} onChange={onInputChange} />
+				<button onClick={addItem}>+</button>
+				<button>{cartButtonName}</button>
 			</div>
 		</article>
 	);

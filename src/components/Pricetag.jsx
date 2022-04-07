@@ -1,18 +1,6 @@
 import React from "react";
+// import { countTotalAmount } from "../redux/product-reducer";
 
-const total = ({state}) => {
-    const addonsAmount = state.addons.reduce((acc, addon) => {
-        return addon.selected ? acc + addon.price : acc;
-    }, 0)
-
-    return (state.productPrice + addonsAmount) * state.qty;
-}
-
-export const Pricetag = state => {
-    return (
-        <p>{total(state)} р</p>
-    )
-}
-
-
-
+// export const Pricetag = ({ productData }) => {
+// 	return <p>{countTotalAmount(productData)} р</p>;
+// };
