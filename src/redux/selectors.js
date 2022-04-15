@@ -2,6 +2,10 @@ export const selectProducts = (state) => {
 	return Object.values(state.products);
 };
 
+export const selectCartData = (state) => {
+	return state.cart.products;
+};
+
 export const selectProductById = (productId) => (state) => {
 	return state.products[productId];
 };
@@ -31,7 +35,7 @@ export const selectTotalPrice = (productId) => (state) => {
 	if (currentProductCard) {
 		const addonsPrice = selectAddonPriceByProductId(productId)(state);
 		let selectedAddonsPrice = 0;
-		for (const addonId of currentProductCard.selectedAddons) {
+		for (const addonId of currentProductCard.addons) {
 			selectedAddonsPrice += addonsPrice[addonId];
 		}
 		const productQty = currentProductCard.qty;
@@ -45,7 +49,7 @@ export const selectAddonsByProductId = (productId) => (state) => {
 	const product = selectProductById(productId)(state);
 	const currentProductCard = selectCurrentProductCard(state);
 	if (currentProductCard) {
-		const selectedAddons = currentProductCard.selectedAddons;
+		const selectedAddons = currentProductCard.addons;
 		return product.addons.map((addon) => ({
 			...addon,
 			selected: selectedAddons.includes(addon.id),
@@ -58,12 +62,13 @@ export const selectAddonsByProductId = (productId) => (state) => {
 export const selectCartButtonName = (productId) => (state) => {
 	const productCart = selectCartProductById(productId)(state);
 	const currentProductCard = selectCurrentProductCard(state);
+
 	if (!productCart) {
-		return "Добавить в корзину";
+		return "Добавить к заказу";
 	}
-	if (JSON.stringify(productCart) !== JSON.stringify(currentProductCard)) {
-		return "Обновить корзину";
-	} else {
+	if (JSON.stringify(productCart) === JSON.stringify(currentProductCard)) {
 		return "В корзине";
+	} else {
+		return "Обновить состав корзины";
 	}
 };

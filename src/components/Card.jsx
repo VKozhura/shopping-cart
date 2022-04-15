@@ -1,12 +1,19 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addItemAC, removeItemAC, setQtyAC, toggleActiveAddonAC } from "../redux/product-reducer";
+import {
+	addItemAC,
+	removeItemAC,
+	setQtyAC,
+	toggleActiveAddonAC,
+	updateCartAC,
+} from "../redux/product-reducer";
 
 import {
 	selectTotalPrice,
 	selectAddonsByProductId,
 	selectCurrentProductCard,
 	selectCartButtonName,
+	selectCartData,
 } from "../redux/selectors";
 
 const Card = ({ product }) => {
@@ -15,9 +22,10 @@ const Card = ({ product }) => {
 	const currentProductCard = useSelector(selectCurrentProductCard);
 	const addons = useSelector(selectAddonsByProductId(product.id));
 	const cartButtonName = useSelector(selectCartButtonName(product.id));
+	const cart = useSelector(selectCartData);
 
 	const addItem = () => {
-		dispatch(addItemAC(product.id));
+		dispatch(addItemAC(currentProductCard.qty));
 	};
 
 	const removeItem = () => {
@@ -39,34 +47,124 @@ const Card = ({ product }) => {
 		dispatch(toggleActiveAddonAC(data));
 	};
 
+	const updateCart = () => {
+		console.log("1", cart);
+		const data = {
+			productId: product.id,
+		};
+		dispatch(updateCartAC(data));
+
+		console.log("2", cart);
+	};
+
 	return (
 		<article id={product.id}>
-			<h3>{product.name}</h3>
-			<p>Артикул: {product.sku}</p>
-			<p>{totalPrice} ₽ </p>
-			<p>{product.description}</p>
-			<ul>
-				{product.attributes.map((attribute) => (
-					<li key={attribute.id}>
-						{attribute.description}: {attribute.pivot.value} {attribute.unit}
-					</li>
-				))}
-			</ul>
-			<div>
-				{addons.map(({ id, selected, title }) => {
-					return (
-						<button onClick={() => toggleActiveAddon(id)} key={id}>
-							{selected ? "Уже добавлен к товару" : "Добавить"} - {title}
-						</button>
-					);
-				})}
+			<h1 className="mb-0 font-weight-bold text-7">{product.name}</h1>
+			<div className="pb-0 clearfix d-flex align-items-center">
+				<div title="Rated 3 out of 5" className="float-start">
+					<input
+						type="text"
+						className="d-none"
+						value="3"
+						title=""
+						data-plugin-star-rating=""
+						data-plugin-options="{&#39;displayOnly&#39;: true, &#39;color&#39;: &#39;primary&#39;, &#39;size&#39;:&#39;xs&#39;}"
+						readOnly
+					/>
+				</div>
+				<span className="count text-color-inherit" itemProp="ratingCount">
+					Артикул: {product.sku}
+				</span>
 			</div>
-			<div>
-				<button onClick={removeItem}>-</button>
-				<input type="number" value={currentProductCard.qty} onChange={onInputChange} />
-				<button onClick={addItem}>+</button>
-				<button>{cartButtonName}</button>
+			<div className="divider divider-small">
+				<hr className="bg-color-grey-scale-4" />
 			</div>
+
+			<p className="price mb-3">
+				<span className="sale text-color-dark" style={{ fontSize: "3em", padding: "0.3em 0" }}>
+					{totalPrice} ₽
+				</span>
+			</p>
+
+			<p className="text-3-5 mb-3">{product.description}</p>
+
+			<div className="col">
+				<ul className="list list-icons list-secondary">
+					{product.attributes.map((attribute) => (
+						<li key={attribute.id}>
+							<i className="fas fa-check"></i>
+							{attribute.description}:
+							<strong className="text-color-dark">
+								{attribute.pivot.value} {attribute.unit}
+							</strong>
+						</li>
+					))}
+				</ul>
+				<div className="row mt-5">
+					{addons.map(({ id, selected, title, addable_product }) => {
+						return (
+							<div key={id} className="col">
+								<button
+									onClick={() => toggleActiveAddon(id)}
+									type="button"
+									className={
+										selected
+											? "w-100 px-5 pt-3 btn btn-outline-dark btn-lg position-relative btn-success"
+											: "w-100 px-5 pt-3 btn btn-outline-dark btn-lg position-relative"
+									}
+								>
+									{title}
+									<span className="position-absolute top-0 start-50 translate-middle badge rounded-pill bg-danger">
+										+ {Number(addable_product.price)} ₽
+									</span>
+								</button>
+							</div>
+						);
+					})}
+				</div>
+			</div>
+
+			<form
+				encType="multipart/form-data"
+				method="post"
+				className="cart"
+				action="https://svai.center/categories/1/products/shop-cart.html"
+			>
+				<hr />
+				{/* убрала класс у дива ниже */}
+				<div>
+					<input
+						type="button"
+						className="minus text-color-hover-light bg-color-hover-secondary border-color-hover-primary"
+						defaultValue="-"
+						onClick={removeItem}
+					/>
+					<input
+						type="number"
+						className="input-text qty text"
+						title="Qty"
+						value={currentProductCard.qty}
+						name="quantity"
+						min="1"
+						step="1"
+						id="qty"
+						onChange={onInputChange}
+					/>
+					<input
+						type="button"
+						className=" plus text-color-hover-light bg-color-hover-secondary border-color-hover-primary"
+						defaultValue="+"
+						onClick={addItem}
+					/>
+				</div>
+				<a
+					onClick={updateCart}
+					id="addToCartButton"
+					className="btn btn-warning btn-modern text-uppercase bg-color-hover-secondary border-color-hover-secondary text-dark text-hover-light"
+				>
+					{cartButtonName}
+				</a>
+			</form>
 		</article>
 	);
 };

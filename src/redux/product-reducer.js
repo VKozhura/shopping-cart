@@ -7,7 +7,7 @@ const itemsReducer = (state = initialState, action) => {
 				...state,
 				currentProductCard: {
 					...state.currentProductCard,
-					qty: state.currentProductCard.qty + 1,
+					qty: action.payload + 1,
 				},
 			};
 		}
@@ -36,9 +36,26 @@ const itemsReducer = (state = initialState, action) => {
 				...state,
 				currentProductCard: {
 					...currentProductCard,
-					selectedAddons: currentProductCard.selectedAddons.includes(action.payload.addonId)
-						? currentProductCard.selectedAddons.filter((addon) => addon !== action.payload.addonId)
-						: [...currentProductCard.selectedAddons, action.payload.addonId],
+					addons: currentProductCard.addons.includes(action.payload.addonId)
+						? currentProductCard.addons.filter((addon) => addon !== action.payload.addonId)
+						: [...currentProductCard.addons, action.payload.addonId],
+				},
+			};
+		}
+		case "UPDATE_CART": {
+			const currentProductCard = state.currentProductCard;
+
+			const newCartProducts = state.cart.products.map((product) => {
+				if (product.productId === currentProductCard.productId) {
+					return currentProductCard;
+				}
+				return product;
+			});
+			return {
+				...state,
+				cart: {
+					...state.cart,
+					products: newCartProducts,
 				},
 			};
 		}
@@ -67,4 +84,9 @@ export const setQtyAC = ({ qty }) => ({
 export const toggleActiveAddonAC = ({ addonId }) => ({
 	type: "TOGGLE_ACTIVE_ADDON",
 	payload: { addonId },
+});
+
+export const updateCartAC = ({ productId }) => ({
+	type: "UPDATE_CART",
+	payload: { productId },
 });
