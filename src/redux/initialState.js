@@ -8,9 +8,9 @@ const modifyDataToInitialState = (productData, cartData) => {
 			products: cartData,
 		},
 		currentProductCard: {
-			productId: productCart.productId,
-			addons: productCart.addons,
-			qty: productCart.qty,
+			productId: productCart ? productCart.productId : productData.id,
+			addons: productCart ? productCart.addons : [],
+			qty: productCart ? productCart.qty : 1,
 		},
 	};
 };

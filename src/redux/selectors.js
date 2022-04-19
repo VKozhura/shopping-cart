@@ -2,10 +2,6 @@ export const selectProducts = (state) => {
 	return Object.values(state.products);
 };
 
-export const selectCartData = (state) => {
-	return state.cart.products;
-};
-
 export const selectProductById = (productId) => (state) => {
 	return state.products[productId];
 };

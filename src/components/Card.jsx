@@ -5,7 +5,7 @@ import {
 	removeItemAC,
 	setQtyAC,
 	toggleActiveAddonAC,
-	updateCartAC,
+	updateCartFetchAC,
 } from "../redux/product-reducer";
 
 import {
@@ -13,7 +13,6 @@ import {
 	selectAddonsByProductId,
 	selectCurrentProductCard,
 	selectCartButtonName,
-	selectCartData,
 } from "../redux/selectors";
 
 const Card = ({ product }) => {
@@ -22,7 +21,6 @@ const Card = ({ product }) => {
 	const currentProductCard = useSelector(selectCurrentProductCard);
 	const addons = useSelector(selectAddonsByProductId(product.id));
 	const cartButtonName = useSelector(selectCartButtonName(product.id));
-	const cart = useSelector(selectCartData);
 
 	const addItem = () => {
 		dispatch(addItemAC(currentProductCard.qty));
@@ -48,18 +46,15 @@ const Card = ({ product }) => {
 	};
 
 	const updateCart = () => {
-		console.log("1", cart);
 		const data = {
 			productId: product.id,
 		};
-		dispatch(updateCartAC(data));
-
-		console.log("2", cart);
+		dispatch(updateCartFetchAC(data));
 	};
 
 	return (
 		<article id={product.id}>
-			<h1 className="mb-0 font-weight-bold text-7">{product.name}</h1>
+			<h1 className="mb-0 font-weight-bold text-7">{product.name} </h1>
 			<div className="pb-0 clearfix d-flex align-items-center">
 				<div title="Rated 3 out of 5" className="float-start">
 					<input
@@ -93,7 +88,7 @@ const Card = ({ product }) => {
 					{product.attributes.map((attribute) => (
 						<li key={attribute.id}>
 							<i className="fas fa-check"></i>
-							{attribute.description}:
+							{attribute.description}:&nbsp;
 							<strong className="text-color-dark">
 								{attribute.pivot.value} {attribute.unit}
 							</strong>
@@ -157,13 +152,13 @@ const Card = ({ product }) => {
 						onClick={addItem}
 					/>
 				</div>
-				<a
+				<button
 					onClick={updateCart}
 					id="addToCartButton"
 					className="btn btn-warning btn-modern text-uppercase bg-color-hover-secondary border-color-hover-secondary text-dark text-hover-light"
 				>
 					{cartButtonName}
-				</a>
+				</button>
 			</form>
 		</article>
 	);

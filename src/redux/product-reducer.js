@@ -44,6 +44,9 @@ const itemsReducer = (state = initialState, action) => {
 		}
 		case "UPDATE_CART": {
 			const currentProductCard = state.currentProductCard;
+			const productCart = state.cart.products.find(
+				(productInCart) => currentProductCard.productId === productInCart.productId
+			);
 
 			const newCartProducts = state.cart.products.map((product) => {
 				if (product.productId === currentProductCard.productId) {
@@ -55,7 +58,7 @@ const itemsReducer = (state = initialState, action) => {
 				...state,
 				cart: {
 					...state.cart,
-					products: newCartProducts,
+					products: productCart ? newCartProducts : [...state.cart.products, currentProductCard],
 				},
 			};
 		}
@@ -90,3 +93,11 @@ export const updateCartAC = ({ productId }) => ({
 	type: "UPDATE_CART",
 	payload: { productId },
 });
+
+export const updateCartFetchAC =
+	({ productId }) =>
+	(dispatch, getState) => {
+		dispatch(updateCartAC(productId));
+		const state = getState();
+		console.log(JSON.stringify(state.cart.products));
+	};
