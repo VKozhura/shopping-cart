@@ -119,47 +119,40 @@ const Card = ({ product }) => {
 				</div>
 			</div>
 
-			<form
-				encType="multipart/form-data"
-				method="post"
-				className="cart"
-				action="https://svai.center/categories/1/products/shop-cart.html"
+			<hr />
+			{/* убрала класс у дива ниже */}
+			<div>
+				<input
+					type="button"
+					className="minus text-color-hover-light bg-color-hover-secondary border-color-hover-primary"
+					defaultValue="-"
+					onClick={onDecrement}
+				/>
+				<input
+					type="number"
+					className="input-text qty text"
+					title="Qty"
+					value={currentProductCard.qty}
+					name="quantity"
+					min="1"
+					step="1"
+					id="qty"
+					onChange={onInputChange}
+				/>
+				<input
+					type="button"
+					className=" plus text-color-hover-light bg-color-hover-secondary border-color-hover-primary"
+					defaultValue="+"
+					onClick={onIncrement}
+				/>
+			</div>
+			<button
+				onClick={updateCart}
+				id="addToCartButton"
+				className="btn btn-warning btn-modern text-uppercase bg-color-hover-secondary border-color-hover-secondary text-dark text-hover-light"
 			>
-				<hr />
-				{/* убрала класс у дива ниже */}
-				<div>
-					<input
-						type="button"
-						className="minus text-color-hover-light bg-color-hover-secondary border-color-hover-primary"
-						defaultValue="-"
-						onClick={onDecrement}
-					/>
-					<input
-						type="number"
-						className="input-text qty text"
-						title="Qty"
-						value={currentProductCard.qty}
-						name="quantity"
-						min="1"
-						step="1"
-						id="qty"
-						onChange={onInputChange}
-					/>
-					<input
-						type="button"
-						className=" plus text-color-hover-light bg-color-hover-secondary border-color-hover-primary"
-						defaultValue="+"
-						onClick={onIncrement}
-					/>
-				</div>
-				<button
-					onClick={updateCart}
-					id="addToCartButton"
-					className="btn btn-warning btn-modern text-uppercase bg-color-hover-secondary border-color-hover-secondary text-dark text-hover-light"
-				>
-					{cartButtonName}
-				</button>
-			</form>
+				{cartButtonName}
+			</button>
 		</article>
 	);
 };
