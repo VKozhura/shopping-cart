@@ -1,17 +1,17 @@
 import { initialState } from "./initialState";
 
-const itemsReducer = (state = initialState, action) => {
+const productReducer = (state = initialState, action) => {
 	switch (action.type) {
-		case "ADD_QTY": {
+		case "INCREMENT_QTY": {
 			return {
 				...state,
 				currentProductCard: {
 					...state.currentProductCard,
-					qty: action.payload + 1,
+					qty: state.currentProductCard.qty + 1,
 				},
 			};
 		}
-		case "REMOVE_QTY": {
+		case "DECREMENT_QTY": {
 			return {
 				...state,
 				currentProductCard: {
@@ -54,6 +54,7 @@ const itemsReducer = (state = initialState, action) => {
 				}
 				return product;
 			});
+
 			return {
 				...state,
 				cart: {
@@ -67,37 +68,4 @@ const itemsReducer = (state = initialState, action) => {
 	}
 };
 
-export default itemsReducer;
-
-export const addItemAC = (productId) => ({
-	type: "ADD_QTY",
-	payload: productId,
-});
-
-export const removeItemAC = (productId) => ({
-	type: "REMOVE_QTY",
-	payload: productId,
-});
-
-export const setQtyAC = ({ qty }) => ({
-	type: "SET_QTY",
-	payload: { qty },
-});
-
-export const toggleActiveAddonAC = ({ addonId }) => ({
-	type: "TOGGLE_ACTIVE_ADDON",
-	payload: { addonId },
-});
-
-export const updateCartAC = ({ productId }) => ({
-	type: "UPDATE_CART",
-	payload: { productId },
-});
-
-export const updateCartFetchAC =
-	({ productId }) =>
-	(dispatch, getState) => {
-		dispatch(updateCartAC(productId));
-		const state = getState();
-		console.log(JSON.stringify(state.cart.products));
-	};
+export default productReducer;

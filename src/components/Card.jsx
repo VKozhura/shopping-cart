@@ -1,12 +1,12 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
-	addItemAC,
-	removeItemAC,
+	incrementQtyAC,
+	decrementQtyAC,
 	setQtyAC,
 	toggleActiveAddonAC,
 	updateCartFetchAC,
-} from "../redux/product-reducer";
+} from "../redux/actions";
 
 import {
 	selectTotalPrice,
@@ -22,12 +22,12 @@ const Card = ({ product }) => {
 	const addons = useSelector(selectAddonsByProductId(product.id));
 	const cartButtonName = useSelector(selectCartButtonName(product.id));
 
-	const addItem = () => {
-		dispatch(addItemAC(currentProductCard.qty));
+	const onIncrement = () => {
+		dispatch(incrementQtyAC());
 	};
 
-	const removeItem = () => {
-		currentProductCard.qty > 1 && dispatch(removeItemAC(product.id));
+	const onDecrement = () => {
+		currentProductCard.qty > 1 && dispatch(decrementQtyAC());
 	};
 
 	const onInputChange = (e) => {
@@ -132,7 +132,7 @@ const Card = ({ product }) => {
 						type="button"
 						className="minus text-color-hover-light bg-color-hover-secondary border-color-hover-primary"
 						defaultValue="-"
-						onClick={removeItem}
+						onClick={onDecrement}
 					/>
 					<input
 						type="number"
@@ -149,7 +149,7 @@ const Card = ({ product }) => {
 						type="button"
 						className=" plus text-color-hover-light bg-color-hover-secondary border-color-hover-primary"
 						defaultValue="+"
-						onClick={addItem}
+						onClick={onIncrement}
 					/>
 				</div>
 				<button
