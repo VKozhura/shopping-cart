@@ -27,18 +27,13 @@ export const selectTotalPrice = (productId) => (state) => {
 	const product = selectProductById(productId)(state);
 	const productPrice = Number(product.price);
 	const currentProductCard = selectCurrentProductCard(state);
-
-	if (currentProductCard) {
-		const addonsPrice = selectAddonPriceByProductId(productId)(state);
-		let selectedAddonsPrice = 0;
-		for (const addonId of currentProductCard.addons) {
-			selectedAddonsPrice += addonsPrice[addonId];
-		}
-		const productQty = currentProductCard.qty;
-		return (productPrice + selectedAddonsPrice) * productQty;
-	} else {
-		return Number(product.price);
+	const addonsPrice = selectAddonPriceByProductId(productId)(state);
+	let selectedAddonsPrice = 0;
+	for (const addonId of currentProductCard.addons) {
+		selectedAddonsPrice += addonsPrice[addonId];
 	}
+	const productQty = currentProductCard.qty;
+	return ((productPrice + selectedAddonsPrice) * productQty).toLocaleString("ru-RU");
 };
 
 export const selectAddonsByProductId = (productId) => (state) => {

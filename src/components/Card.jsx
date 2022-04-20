@@ -110,7 +110,7 @@ const Card = ({ product }) => {
 								>
 									{title}
 									<span className="position-absolute top-0 start-50 translate-middle badge rounded-pill bg-danger">
-										+ {Number(addable_product.price)} ₽
+										+ {Number(addable_product.price).toLocaleString("ru-RU")} ₽
 									</span>
 								</button>
 							</div>
