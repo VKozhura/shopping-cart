@@ -10,4 +10,5 @@ export const store = createStore(
 	initialState,
 	composeEnhancers(applyMiddleware(thunk))
 );
+
 window.store = store;

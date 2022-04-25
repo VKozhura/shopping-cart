@@ -95,25 +95,12 @@ const Card = ({ product }) => {
 						</li>
 					))}
 				</ul>
-				<div className="row mt-5">
+				<div className="mt-5 row">
 					{addons.map(({ id, selected, title, addable_product }) => {
 						return (
-							<div key={id} className="col">
-								<button
-									onClick={() => toggleActiveAddon(id)}
-									type="button"
-									className={
-										selected
-											? "w-100 px-5 pt-3 btn btn-outline-dark btn-lg position-relative btn-success"
-											: "w-100 px-5 pt-3 btn btn-outline-dark btn-lg position-relative"
-									}
-								>
-									{title}
-									<span className="position-absolute top-0 start-50 translate-middle badge rounded-pill bg-danger">
-										+ {Number(addable_product.price).toLocaleString("ru-RU")} ₽
-									</span>
-								</button>
-							</div>
+                        <span key={id} className={selected ? 'col btn btn-success position-relative m-2' : 'col btn btn-outline-success position-relative m-2'} onClick={() => toggleActiveAddon(id)}>
+                            {title} <span className="badge bg-secondary">+ {Number(addable_product.price).toLocaleString("ru-RU")} ₽</span>
+                        </span>
 						);
 					})}
 				</div>
@@ -121,38 +108,21 @@ const Card = ({ product }) => {
 
 			<hr />
 			{/* убрала класс у дива ниже */}
-			<div>
-				<input
-					type="button"
-					className="minus text-color-hover-light bg-color-hover-secondary border-color-hover-primary"
-					defaultValue="-"
-					onClick={onDecrement}
-				/>
-				<input
-					type="number"
-					className="input-text qty text"
-					title="Qty"
-					value={currentProductCard.qty}
-					name="quantity"
-					min="1"
-					step="1"
-					id="qty"
-					onChange={onInputChange}
-				/>
-				<input
-					type="button"
-					className=" plus text-color-hover-light bg-color-hover-secondary border-color-hover-primary"
-					defaultValue="+"
-					onClick={onIncrement}
-				/>
-			</div>
-			<button
-				onClick={updateCart}
-				id="addToCartButton"
-				className="btn btn-warning btn-modern text-uppercase bg-color-hover-secondary border-color-hover-secondary text-dark text-hover-light"
-			>
-				{cartButtonName}
-			</button>
+            <div className="row">
+                <div className="col-lg-4 col-md-6 col-6">
+                    <div className="input-group mb-3">
+                        <button className="btn btn-outline-info" type="button" onClick={onDecrement}>-</button>
+                        <input type="number" className="form-control text-center" value={currentProductCard.qty} onChange={onInputChange} />
+                        <button className="btn btn-outline-danger" type="button" onClick={onIncrement}>+</button>
+                    </div>
+                </div>
+                <div className="col-lg-8 col-md-6 col-6">
+                    <button type="button" onClick={updateCart} id="addToCartButton" className="btn btn-warning text-dark w-100">
+                        {cartButtonName}
+                    </button>
+                </div>
+            </div>
+
 		</article>
 	);
 };

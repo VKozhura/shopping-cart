@@ -29,6 +29,21 @@ const productReducer = (state = initialState, action) => {
 				},
 			};
 		}
+        case "LOAD_CART": {
+            const productCart = action.payload.find((productInCart) => window.product.id === productInCart.productId);
+
+            return {
+                ...state,
+                cart: {
+                    products: [...action.payload],
+                },
+                currentProductCard: {
+                    productId: productCart ? productCart.productId : productData.id,
+                    addons: productCart ? productCart.addons : [],
+                    qty: productCart ? productCart.qty : 1,
+                },
+            };
+        }
 		case "TOGGLE_ACTIVE_ADDON": {
 			const currentProductCard = state.currentProductCard;
 

@@ -15,4 +15,4 @@ const modifyDataToInitialState = (productData, cartData) => {
 	};
 };
 
-export const initialState = modifyDataToInitialState(window.product, window.cart);
+export const initialState = modifyDataToInitialState(window.product, []);

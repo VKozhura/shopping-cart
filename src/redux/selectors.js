@@ -55,11 +55,11 @@ export const selectCartButtonName = (productId) => (state) => {
 	const currentProductCard = selectCurrentProductCard(state);
 
 	if (!productCart) {
-		return "Добавить к заказу";
+		return "Заказать";
 	}
 	if (JSON.stringify(productCart) === JSON.stringify(currentProductCard)) {
 		return "В корзине";
 	} else {
-		return "Обновить состав корзины";
+		return "Обновить заказ";
 	}
 };
